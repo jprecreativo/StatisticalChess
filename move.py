@@ -1,4 +1,7 @@
 
+import operator
+from fractions import Fraction
+
 class Move:
     __directory = "D:\Documentos\Ajedrez\Bases de datos\StatisticalChess\\"
     __lines = ""
@@ -8,24 +11,53 @@ class Move:
         self.__lines = file.readlines()
 
     def __candidateMoves(self, game: str, numMove: int):
-        cadidateMoves = []
+        candidateMovesFrequencies = {}
+        candidateMovesWins = {}
+        result = ""
         
-        if numMove != -1:
-            game += " " + numMove + ". " 
+        if numMove != -1:   # Black to play.
+            game += str(numMove) + ". "
 
         for line in self.__lines:
             candidateMove = line.partition(game)[2].partition(" ")[0]
 
             if candidateMove != "":
-                cadidateMoves.append(candidateMove)
+                result = line.split()[-1]
 
-        return cadidateMoves
+                if candidateMove in candidateMovesFrequencies:
+                    try:
+                        if numMove != -1:   # Black to play.
+                            candidateMovesWins[candidateMove] += float(Fraction(result.partition("-")[2].partition("\n")[0]))
+
+                        else:   # White to play.
+                            candidateMovesWins[candidateMove] += float(Fraction(result.partition("-")[2].partition("\n")[0]))
+
+                        candidateMovesFrequencies[candidateMove] += 1
+
+                    except: pass
+
+                else:
+                    try:
+                        if numMove != -1:   # Black to play.
+                            candidateMovesWins[candidateMove] = float(Fraction(result.partition("-")[2].partition("\n")[0]))
+
+                        else:   # White to play.
+                            candidateMovesWins[candidateMove] = float(Fraction(result.partition("-")[2].partition("\n")[0]))
+
+                        candidateMovesFrequencies[candidateMove] = 1
+                    
+                    except: pass
+
+        return candidateMovesFrequencies, candidateMovesWins
 
     def nextMove(self, game: str, numMove: int):
-        cadidateMoves = self.__candidateMoves(game, numMove)
+        candidateMovesFrequencies, candidateMovesWins = self.__candidateMoves(game, numMove)
+        candidateMoves = {}
+
+        for key in candidateMovesFrequencies:
+            candidateMoves[key] = candidateMovesFrequencies[key] * candidateMovesWins[key]
 
         try:
-            return max(set(cadidateMoves), key=cadidateMoves.count)
+            return max(candidateMoves, key=candidateMoves.get)
         
-        except:
-            return ""
+        except: return ""
