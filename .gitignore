@@ -1,2 +1,3 @@
-__pycache__/game.cpython-37.pyc
-__pycache__/move.cpython-37.pyc
+
+__pycache__/
+.vscode/

@@ -1,26 +1,35 @@
 
+from menu import Menu as MenuClass
 from game import Game as GameClass
-from move import Move as MoveClass
 
 if __name__ == "__main__":
-    firstMoves = ["a3","a4","b3","b4","c3","c4","d3","d4","e3","e4","f3","f4","g3","g4","h3","h4","Na3","Nc3","Nf3","Nh3"]
-    firstMove = "a3"
-    game = GameClass()
-    move = MoveClass()
+    startedGame = False
+    
+    while True:
+        if not startedGame:
+            while True:
+                option = MenuClass.ShowStartMenu(MenuClass)
 
-    game.makeMove(firstMove, True)
-    move.openFile(firstMove)
+                if option in [1,2]:
+                    break
 
-    print(move.nextMove(game.getGame(), -1))
+            startedGame = True
+            humanTurn = True
+            nextMove = ""
 
-    game.makeMove("d5", False)
+            if option == 1:   # Human begins the game.
+                nextMove = MenuClass.AskForMove(MenuClass)
+                humanTurn = False
 
-    print(move.nextMove(game.getGame(), game.getNumMove()))
+            gameObject = GameClass(nextMove)
 
-    game.makeMove("Nf3", True)
+        else:
+            if humanTurn:
+                nextMove = MenuClass.AskForMove(MenuClass)
+                humanTurn = False
 
-    print(move.nextMove(game.getGame(), -1))
+            else:
+                nextMove = ""
+                humanTurn = True
 
-    game.makeMove("Nf6", False)
-
-    print(move.nextMove(game.getGame(), game.getNumMove()))
+            gameObject.makeMove(nextMove)
