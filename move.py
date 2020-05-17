@@ -4,12 +4,10 @@ import operator
 from fractions import Fraction
 
 class Move:
-    __directory = "D:\Documentos\Ajedrez\Bases de datos\StatisticalChess\\"
-    __lines = ""
+    __lines = []
 
-    def openFile(self, name: str):
-        file = open(self.__directory + name + ".txt", "r")
-        self.__lines = file.readlines()
+    def __init__(self, lines: list):
+        self.__lines = lines
 
     def __candidateMoves(self, gameLine: str, turn: bool, numMove: int):
         candidateMovesFrequencies = {}
@@ -46,7 +44,7 @@ class Move:
                     
                     except: pass
 
-        return candidateMovesFrequencies, candidateMovesWins
+        return (candidateMovesFrequencies, candidateMovesWins)
 
     def nextMove(self, gameLine: str, turn: bool, numMove: int):
         candidateMovesFrequencies, candidateMovesWins = self.__candidateMoves(gameLine, turn, numMove)
