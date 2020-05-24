@@ -33,6 +33,3 @@ if __name__ == "__main__":
                 humanTurn = True
 
             startedGame = not (gameObject.makeMove(nextMove))
-
-            if not startedGame:
-                gameObject.resetGame()

@@ -9,10 +9,14 @@ class Game:
     __moveObject = None
     __firstMoves = ["a3","a4","b3","b4","c3","c4","d3","d4","e3","e4","f3","f4","g3","g4","h3","h4","Na3","Nc3","Nf3","Nh3"]
     __gameLine = ""
-    __board = chess.Board()
+    __board = None
     __theoreticalNovelty = False
 
     def __init__(self, firstMove: str):
+        self.__gameLine = ""
+        self.__board = chess.Board()
+        self.__theoreticalNovelty = False
+
         if firstMove == "":
             firstMove = random.choice(self.__firstMoves)
         
@@ -24,7 +28,7 @@ class Game:
             if checkResult:
                 self.__gameLine += self.__board.result()
 
-            self.__moveObject.writeGameLine(self.__gameLine)
+            self.__fileObject.writeGameLine(self.__gameLine)
 
         print(self.__gameLine)
 
@@ -56,14 +60,9 @@ class Game:
                 legalMoves = list(self.__board.legal_moves)
                 nextMove = self.__board.san(random.choice(legalMoves))
 
-                self.__executeMove(nextMove)
-
+        self.__executeMove(nextMove)
+        
         return (self.__isGameOver())
-
-    def resetGame(self):
-        __gameLine = ""
-        __board = chess.Board()
-        __theoreticalNovelty = False
 
     def makeMove(self, nextMove: str):
         if self.__board.turn == chess.WHITE:
